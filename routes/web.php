@@ -26,6 +26,19 @@ Route::middleware('guest')->group(function () {
 });
 
 // TODO 3: Bungkus route terproteksi dengan middleware 'auth', pisahkan route khusus 'role:dosen' dan 'role:mahasiswa', serta aktifkan route penilaian & export CSV
+Route::middleware('auth')->group(function () {
+    // Route khusus Dosen
+    Route::middleware('role:dosen')->group(function () {
+        Route::patch('/submissions/{submission}/grade', [SubmissionController::class, 'grade'])->whereNumber('submission')->name('submissions.grade');
+        Route::get('/assignments/{assignment}/export-csv', [SubmissionController::class, 'exportCsv'])->whereNumber('assignment')->name('assignments.export-csv');
+    });
+
+    // Route khusus Mahasiswa
+    Route::middleware('role:mahasiswa')->group(function () {
+        // Tambahkan route khusus mahasiswa di sini jika diperlukan
+    });
+});
+
 
 // Logout
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

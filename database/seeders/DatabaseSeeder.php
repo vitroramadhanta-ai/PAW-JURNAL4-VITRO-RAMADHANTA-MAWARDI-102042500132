@@ -63,5 +63,81 @@ class DatabaseSeeder extends Seeder
         );
 
         // TODO 8: Tambahkan minimal 2 mata kuliah lagi dengan semester berbeda, 1 mahasiswa tambahan, 2 tugas, dan contoh data submission
+        $mahasiswa2 = User::updateOrCreate(
+            ['email' => 'mahasiswa2@test.com'],
+            [
+                'name' => 'Siti Rahmawati',
+                'password' => Hash::make('mahasiswa123'),
+                'role' => 'mahasiswa',
+                'nomor_induk' => '1301210002',
+            ]
+        );
+
+        $course2 = MataKuliah::updateOrCreate(
+            ['kode_mk' => 'IF302'],
+            [
+                'nama_mk' => 'Basis Data Lanjut',
+                'deskripsi' => 'Mata kuliah yang membahas konsep lanjutan basis data, normalisasi, dan optimasi query.',
+                'sks' => 3,
+                'semester' => 'Genap 2026/2027',
+                'dosen_id' => $dosen->id,
+            ]
+        );
+
+        $course3 = MataKuliah::updateOrCreate(
+            ['kode_mk' => 'IF303'],
+            [
+                'nama_mk' => 'Pemrograman Berorientasi Objek',
+                'deskripsi' => 'Mata kuliah yang membahas pengembangan aplikasi berorientasi kepada objek menggunakan Java.',
+                'sks' => 3,
+                'semester' => 'Ganjil 2026/2027',
+                'dosen_id' => $dosen->id,
+            ]
+        );
+
+        $course2->students()->syncWithoutDetaching([
+            $mahasiswa1->id => ['status' => 'approved'],
+            $mahasiswa2->id => ['status' => 'approved'],
+        ]);
+
+        $course3->students()->syncWithoutDetaching([
+            $mahasiswa1->id => ['status' => 'approved'],
+        ]);
+
+        $assignment1 = Assignment::updateOrCreate(
+            ['course_id' => $course1->id, 'judul' => 'Tugas 1: CRUD Sederhana'],
+            [
+                'deskripsi' => 'Buatlah aplikasi CRUD sederhana menggunakan Laravel.',
+                'deadline' => now()->addDays(7),
+            ]
+        );
+
+        $assignment2 = Assignment::updateOrCreate(
+            ['course_id' => $course2->id, 'judul' => 'Tugas 1: Normalisasi Basis Data'],
+            [
+                'deskripsi' => 'Lakukan normalisasi pada skema basis data yang diberikan.',
+                'deadline' => now()->addDays(10),
+            ]
+        );
+
+        Submission::updateOrCreate(
+            ['assignment_id' => $assignment1->id, 'user_id' => $mahasiswa1->id],
+            [
+                'jawaban' => 'Berikut adalah jawaban saya untuk Tugas 1: CRUD Sederhana.',
+                'submitted_at' => now(),
+                'nilai' => 85,
+                'catatan_dosen' => 'Kerja bagus, tapi perhatikan validasi input.',
+            ]
+        );
+
+        Submission::updateOrCreate(
+            ['assignment_id' => $assignment2->id, 'user_id' => $mahasiswa2->id],
+            [
+                'jawaban' => 'Berikut adalah jawaban saya untuk Tugas 1: Normalisasi Basis Data.',
+                'submitted_at' => now(),
+                'nilai' => 90,
+                'catatan_dosen' => 'Sangat baik, semua normalisasi sudah tepat.',
+            ]
+        );
     }
 }

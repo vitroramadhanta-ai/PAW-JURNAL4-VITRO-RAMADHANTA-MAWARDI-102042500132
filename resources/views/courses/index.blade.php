@@ -38,15 +38,30 @@
             </div>
             
             {{-- TODO 6: Tambahkan dropdown filter Semester dan dropdown Urutkan (Sort) di sini --}}
-            
-            <button type="submit" class="btn btn-secondary">
-                Filter &amp; Cari
-            </button>
-            @if(request('search'))
-                <a href="{{ route('courses.index') }}" class="btn btn-secondary" style="color: var(--slate-500);">
-                    Reset
-                </a>
-            @endif
+            <select name="semester" class="form-control" style="min-width: 180px;">
+                <option value="">Semua Semester</option>
+                <option value="Ganjil 2026/2027" {{ request('semester') == 'Ganjil 2026/2027' ? 'selected' : '' }}>
+                    Ganjil 2026/2027
+                </option>
+                <option value="Genap 2026/2027" {{ request('semester') == 'Genap 2026/2027' ? 'selected' : '' }}>
+                    Genap 2026/2027
+                </option>
+                <option value="Ganjil 2027/2028" {{ request('semester') == 'Ganjil 2027/2028' ? 'selected' : '' }}>
+                    Ganjil 2027/2028
+                </option>
+            </select>
+
+            <select name="sort" class="form-control" style="min-width: 180px;">
+                <option value="nama_asc" {{ request('sort') == 'nama_asc' ? 'selected' : '' }}>
+                    Nama (A-Z)
+                </option>
+                <option value="nama_desc" {{ request('sort') == 'nama_desc' ? 'selected' : '' }}>
+                    Nama (Z-A)
+                </option>
+                <option value="terbaru" {{ request('sort') == 'terbaru' ? 'selected' : '' }}>
+                    Terbaru
+                </option>
+            </select>       
         </form>
     </div>
 
